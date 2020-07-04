@@ -7,9 +7,13 @@ let viewFolder = `index/pages/${controller}`;
 
 // INDEX
 router.get('/', async function (req, res, next) {
+    
     //let data = await userModel.model.find({});
     //console.log(data);
-    res.render(`${viewFolder}/index`, { title: 'Express' });
+    res.render(`${viewFolder}/index`, {
+        title: 'Express',
+        user: req.user,
+    });
 });
 
 module.exports = router;

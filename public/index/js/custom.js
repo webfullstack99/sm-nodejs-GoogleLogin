@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $('#login-btn').click(()=>{
-        alert('login');
-    })
+    //$('#login-btn').click(()=>{
+        //alert('login');
+    //})
 })

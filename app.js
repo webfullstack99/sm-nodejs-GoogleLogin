@@ -6,6 +6,9 @@ const logger = require('morgan');
 
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
+const passport = require('passport');
+const cookieSession = require('cookie-session')
+require('./passport-setup');
 
 const app = express();
 
@@ -24,7 +27,7 @@ global.__helper = require(`${__path.helper}/helper`);
 //var db = mongoose.connection;
 //db.on('error', console.error.bind(console, 'connection error:'));
 //db.once('open', function () {
-    //console.log('db connected ==||=========>>\n');
+//console.log('db connected ==||=========>>\n');
 //});
 
 // view engine setup
@@ -36,10 +39,48 @@ app.set('layout', `${__path.views_index}/main`);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieSession({
+    name: 'google-login',
+    keys: ['key1', 'key2'],
+    maxAge: 1000,
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 // routes
+const isLogged = (req, res, next) => {
+    if (req.user) {
+        next();
+    } else {
+        res.redirect('/auth/google')
+    }
+}
+
+app.get('/auth/google',
+    passport.authenticate('google', {
+        scope:
+            ['https://www.googleapis.com/auth/plus.login',
+                , 'https://www.googleapis.com/auth/plus.profile.emails.read']
+    }
+    ));
+
+app.get('/auth/google/callback',
+    passport.authenticate('google', {
+        successRedirect: '/',
+        failureRedirect: '/auth/google/failure'
+    }));
+
+app.get('/auth/google/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+})
+
+app.get('/auth/google/failure', (req, res) => {
+    res.send('login failed');
+})
+
 app.use(__conf.prefix.index, require(`${__path.routes}/index/navigator`));
 
 // catch 404 and forward to error handler
