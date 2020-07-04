@@ -1,26 +1,30 @@
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="/auth/google" id="login-btn" class="btn btn-primary">Login with google</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="/auth/google/success" id="login-btn" class="btn btn-primary">Go to admin page</a>
-                </li>
-                <% if (user){ %>
-                <li class="list-group-item disabled">
-                    <a href="/auth/google/logout" id="login-btn" class="btn btn-primary">Logout</a>
-                </li>
-                <div class="card" style="width: 100px">
-                    <img class="card-img-top" src="<%=user.picture%>" alt="">
-                    <div class="card-body">
-                        <h4 class="card-title">Info</h4>
-                        <p class="card-text"></p>
-                    </div>
-                </div>
-                <% } %>
-            </ul>
+<div class="row">
+
+    <!-- TITLE -->
+    <div class="col-12 d-flex justify-content-between">
+        <h3>Home</h3>
+        <div>
+            <% if (!user) { %>
+            <a href="/auth/google" class="btn btn-primary">Login</a>
+            <% } else { %>
+            <a href="/auth/google/logout" class="btn btn-danger">Logout</a>
+            <% } %>
+
         </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="col-12 d-flex justify-content-center mt-4">
+        <% if (user) { %>
+        <div id="user-card" class="card">
+            <img class="card-img-top" src="<%= user.picture %> " alt="">
+            <div class="card-body">
+                <h4 class="card-title"><%= user.displayName %> </h4>
+                <div>
+                    <textarea class="form-control" name="" id="" rows="3"><%= JSON.stringify(user) %> </textarea>
+                </div>
+            </div>
+        </div>
+        <% } %>
     </div>
 </div>

@@ -8,7 +8,6 @@ const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieSession = require('cookie-session')
-require('./passport-setup');
 
 const app = express();
 
@@ -17,18 +16,11 @@ global.__path = require('./app/path');
 global.__conf = require(`${__path.config}/conf`);
 global.__helper = require(`${__path.helper}/helper`);
 
-// database
-//let dbConnectParams = require(`${__path.config}/database`).dbConnectParams;
-//mongoose.connect(__helper.strFormat(dbConnectParams.url, dbConnectParams.username, dbConnectParams.password, dbConnectParams.db), {
-//useNewUrlParser: true,
-//useUnifiedTopology: true
-//});
+// auth
+require(`${__path.libs}/passport-setup`);
 
-//var db = mongoose.connection;
-//db.on('error', console.error.bind(console, 'connection error:'));
-//db.once('open', function () {
-//console.log('db connected ==||=========>>\n');
-//});
+// database
+//require(`${__path.libs}/database`);
 
 // view engine setup
 app.set('views', __path.views);
@@ -42,7 +34,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieSession({
     name: 'google-login',
     keys: ['key1', 'key2'],
-    maxAge: 1000,
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
