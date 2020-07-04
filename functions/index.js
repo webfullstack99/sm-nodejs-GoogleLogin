@@ -1,3 +1,4 @@
+const functions = require('firebase-functions');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -90,4 +91,4 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-module.exports = app;
+exports.app = functions.https.onRequest(app);
